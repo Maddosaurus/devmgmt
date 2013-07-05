@@ -11,15 +11,16 @@ namespace ONVIF {
     };
 
     struct probematch{
-        std::string Types;
-        std::string Scopes;
-        std::string XAddrs;
-        std::string MetadataVersion;
-        std::string EndpointAddress;
+        std::string types;
+        std::string scopes;
+        std::string xAddrs;
+        std::string metadataVersion;
+        std::string endpointAddress;
     };
 
     ONVIF::probe DiscoverySendProbe(std::string scopes, std::string types);
     ONVIF::probematch DiscoveryReadResponse(probe probe);
+    void ProcessMatch(probematch match);
 }
 
 #endif // ONV_H

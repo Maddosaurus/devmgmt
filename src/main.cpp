@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
     // Send WS-Discovery Probe, collect the responses and then
     // process the responses.
         //probematch_type probematcheslist[]={};
-     std::list<ONVIF::probe> probematcheslist;
+    std::list<ONVIF::probematch> probematcheslist;
 
     // Send probe. See chapter 4.3.1 for details
     ONVIF::probe probe = ONVIF::DiscoverySendProbe("dn:NetworkVideoTransmitter", "onvif://www.onvif.org");
@@ -86,16 +86,27 @@ int main(int argc, char* argv[])
         ONVIF::probematch probematch = ONVIF::DiscoveryReadResponse(probe);
 
         // Store info about the match, first check for duplicates
-        if (!in_list(probematcheslist, probematch))
-        {
-            add_to_list(probematcheslist, probematch);
+//        if (!in_list(probematcheslist, probematch))
+//        {
+//            add_to_list(probematcheslist, probematch);
+//        }
+
+        //Spare much work: Use a Map.
+        bool inList=false;
+        for (std::list<ONVIF::probematch>::const_iterator iterator = probematcheslist.begin(), end = probematcheslist.end(); iterator != end; ++iterator) {
+            if(probematch.endpointAddress.compare(iterator->endpointAddress)){
+                inList=true;
+                break;
+            }
         }
+        if(!inList)
+            probematcheslist.push_back(probematch);
     }
 
     // Process the responses, see chapter 5.1.3 for details.
-    for(int i=0; i < probematcheslist.length; i++)
+    for (std::list<ONVIF::probematch>::const_iterator iterator = probematcheslist.begin(), end = probematcheslist.end(); iterator != end; ++iterator)
     {
-        ONVIF::ProcessMatch(probeMatch);
+        ONVIF::ProcessMatch(*iterator);
     }
 
   return 0;
