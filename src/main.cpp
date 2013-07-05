@@ -36,6 +36,7 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 
 #include "udpreceiver.h"
 #include "onv.h"
@@ -70,17 +71,19 @@ int main(int argc, char* argv[])
 
     // Send WS-Discovery Probe, collect the responses and then
     // process the responses.
-    probematch_type probematcheslist[]={};
+        //probematch_type probematcheslist[]={};
+     std::list<ONVIF::probe> probematcheslist;
 
     // Send probe. See chapter 4.3.1 for details
-    ONVIF::probe probe = ONVIF::DiscoverySendProbe(scopes, types);
+    ONVIF::probe probe = ONVIF::DiscoverySendProbe("dn:NetworkVideoTransmitter", "onvif://www.onvif.org");
 
     // Wait a while for responses
-    while (data_available_and_not_timeout(probe.net_handle))
+    //while (data_available_and_not_timeout(probe.net_handle))
+    for(int i=0; i<500; i++) //Quick 'n Dirty
     {
         // This fetch next probe match so that we can put it into the list
         // See chapter 4.3.2 for details
-        ONVIF::probe probematch = ONVIF::DiscoveryReadResponse(probe);
+        ONVIF::probematch probematch = ONVIF::DiscoveryReadResponse(probe);
 
         // Store info about the match, first check for duplicates
         if (!in_list(probematcheslist, probematch))
@@ -98,4 +101,4 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-data_available_and_not_timeout()
+
