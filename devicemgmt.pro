@@ -37,7 +37,8 @@ SOURCES     += \
     src/main.cpp \
     src/udpreceiver.cpp \
     app.cpp \
-    onv.cpp
+    onv.cpp \
+    src/udpsender.cpp
 
 HEADERS     += \
     src/devicemgmt.h    \
@@ -52,7 +53,8 @@ HEADERS     += \
     src/include.h \
     src/udpreceiver.h \
     app.h \
-    onv.h
+    onv.h \
+    src/udpsender.h
 
 OTHER_FILES += \
     devicemgmt.wsdl    \

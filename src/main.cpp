@@ -38,36 +38,22 @@
 #include <string>
 #include <map>
 
-#include "udpreceiver.h"
+//#include "udpreceiver.h"
 #include "onv.h"
-
-
-
+#include "udpsender.h"
 
 int main(int argc, char* argv[])
 {
-//  try
-//  {
-//    if (argc != 3)
-//    {
-//      std::cerr << "Usage: receiver <listen_address> <multicast_address>\n";
-//      std::cerr << "  For IPv4, try:\n";
-//      std::cerr << "    receiver 0.0.0.0 239.255.0.1\n";
-//      std::cerr << "  For IPv6, try:\n";
-//      std::cerr << "    receiver 0::0 ff31::8000:1234\n";
-//      return 1;
-//    }
+    boost::asio::io_service io_service;
+    UdpSender s(io_service, boost::asio::ip::address::from_string("239.255.255.250"));
+    io_service.run();
+}
 
-//    boost::asio::io_service io_service;
-//    UdpReceiver r(io_service,
-//        boost::asio::ip::address::from_string(argv[1]),
-//        boost::asio::ip::address::from_string(argv[2]));
-//    io_service.run();
-//  }
-//  catch (std::exception& e)
-//  {
-//    std::cerr << "Exception: " << e.what() << "\n";
-//  }
+
+/*
+
+int main(int argc, char* argv[])
+{
 
     // Send WS-Discovery Probe, collect the responses and then
     // process the responses.
@@ -93,7 +79,7 @@ int main(int argc, char* argv[])
 
         //Spare much work: Use a Map.
         bool inList=false;
-        for (std::list<ONVIF::probematch>::const_iterator iterator = probematcheslist.begin(), end = probematcheslist.end(); iterator != end; ++iterator) {
+        for (std::list<ONVIF::probematch>::const_iterator iterator = probematcheslist.begin(), end = probematcheslist.end(); iterator != end; iterator++) {
             if(probematch.endpointAddress.compare(iterator->endpointAddress)){
                 inList=true;
                 break;
@@ -104,12 +90,12 @@ int main(int argc, char* argv[])
     }
 
     // Process the responses, see chapter 5.1.3 for details.
-    for (std::list<ONVIF::probematch>::const_iterator iterator = probematcheslist.begin(), end = probematcheslist.end(); iterator != end; ++iterator)
+    for (std::list<ONVIF::probematch>::const_iterator iterator = probematcheslist.begin(), end = probematcheslist.end(); iterator != end; iterator++)
     {
         ONVIF::ProcessMatch(*iterator);
     }
 
   return 0;
 }
-
+*/
 

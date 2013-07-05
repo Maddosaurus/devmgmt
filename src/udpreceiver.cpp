@@ -28,3 +28,29 @@ void UdpReceiver::handle_receive_from(const boost::system::error_code& error, si
     socket_.async_receive_from( boost::asio::buffer(data_, max_length), sender_endpoint_, boost::bind(&UdpReceiver::handle_receive_from, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
   }
 }
+
+
+//From main .cpp
+
+//  try
+//  {
+//    if (argc != 3)
+//    {
+//      std::cerr << "Usage: receiver <listen_address> <multicast_address>\n";
+//      std::cerr << "  For IPv4, try:\n";
+//      std::cerr << "    receiver 0.0.0.0 239.255.0.1\n";
+//      std::cerr << "  For IPv6, try:\n";
+//      std::cerr << "    receiver 0::0 ff31::8000:1234\n";
+//      return 1;
+//    }
+
+//    boost::asio::io_service io_service;
+//    UdpReceiver r(io_service,
+//        boost::asio::ip::address::from_string(argv[1]),
+//        boost::asio::ip::address::from_string(argv[2]));
+//    io_service.run();
+//  }
+//  catch (std::exception& e)
+//  {
+//    std::cerr << "Exception: " << e.what() << "\n";
+//  }
