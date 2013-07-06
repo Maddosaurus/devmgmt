@@ -11,7 +11,7 @@
 
 //const short multicast_port = 30001;
 const short multicast_port = 3702;
-const int max_message_count = 10;
+const int max_message_count = 1;
 
 
 class UdpSender{

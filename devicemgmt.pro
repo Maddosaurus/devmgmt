@@ -14,7 +14,7 @@ TEMPLATE     = app
 INCLUDEPATH += /opt/local/include
 
 linux {
-    LIBS        += -lboost_system
+    LIBS        += -lboost_system -lboost_serialization
 }
 
 macx {
