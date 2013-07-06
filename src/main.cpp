@@ -2,51 +2,76 @@
 // For more information please visit: http://code.google.com/p/staff/
 // Client skeleton
 
+#include <fstream>
+#include <iostream>
+#include <map>
 #include <memory>
-#include <rise/common/Log.h>
-#include <staff/common/Exception.h>
-#include <staff/client/ServiceFactory.h>
-#include "devicemgmt.h"
-#include "onvif.h"
-#include "xmlmime.h"
-#include ".h"
-#include "b.h"
-#include "ws_addr.h"
-#include "bf.h"
-#include "xml.h"
-#include "t.h"
-#include "include.h"
+#include <string>
+
+
+#include <boost/array.hpp>
 #include <boost/asio.hpp>
 
-#include <iostream>
-#include <boost/array.hpp>
-
 #include "app.h"
-
-
-//
-// receiver.cpp
-// ~~~~~~~~~~~~
-//
-// Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
-
-#include <iostream>
-#include <string>
-#include <map>
-
-//#include "udpreceiver.h"
+#include "device/getsystemdateandtime.h"
+#include "device/envelope.h"
 #include "onv.h"
+#include "tcpasyncclient.h"
 #include "udpsender.h"
+#include "udpreceiver.h"
+#include "helper/xmlhelper.h"
+
+// the following macro eliminates the attributes
+//BOOST_CLASS_IMPLEMENTATION(GetSystemDateAndTime, object_serializable)
 
 int main(int argc, char* argv[])
 {
-    boost::asio::io_service io_service;
-    UdpSender s(io_service, boost::asio::ip::address::from_string("239.255.255.250"));
-    io_service.run();
+    XmlHelper *xmlHelper = new XmlHelper;
+    QDomDocument docDiscover = xmlHelper->loadXml("xml/discover.xml");
+    QDomDocument docGetSystemDateAndTime = xmlHelper->loadXml("xml/device.GetSystemDateAndTime.xml");
+    delete xmlHelper;
+
+
+
+    try {
+        boost::asio::io_service io_service;
+        UdpSender s(io_service, boost::asio::ip::address::from_string("239.255.255.250"), docDiscover.toString().toStdString());
+        io_service.run();
+        //io_service.stop();
+
+        TcpAsyncClient c(io_service, "192.168.1.200", "/onvif/device_service", docGetSystemDateAndTime.toString().toStdString());
+        io_service.run();
+        //io_service.stop();
+
+
+//        std::ofstream ofs("filename.xml");
+//        boost::archive::xml_oarchive oa(ofs);
+
+//        std::ostringstream oss;
+
+//        // the flag no_header eliminates the heading lines
+//        unsigned int flags = boost::archive::no_header;
+
+//        boost::archive::xml_oarchive oa(oss, flags);
+
+//        SOAPENV::Envelope *envelope = new SOAPENV::Envelope();
+//        oa << BOOST_SERIALIZATION_NVP(envelope);
+
+
+
+//        //GetSystemDateAndTime *gsdt = new GetSystemDateAndTime(1, 2, 3.0);
+//        //oa << BOOST_SERIALIZATION_NVP(gsdt);
+
+//        //std::cout << oss.str() << std::endl;
+
+//        //delete gsdt;
+//        delete envelope;
+
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "Exception: " << e.what() << "\n";
+    }
 }
 
 

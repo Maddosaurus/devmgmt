@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
@@ -24,7 +25,7 @@ private:
 
 public:
     UdpSender();
-    UdpSender(boost::asio::io_service& io_service, const boost::asio::ip::address& multicast_address);
+    UdpSender(boost::asio::io_service& io_service, const boost::asio::ip::address& multicast_address, const std::string &message);
 
     void handle_send_to(const boost::system::error_code& error);
     void handle_timeout(const boost::system::error_code& error);

@@ -14,17 +14,18 @@
 
 
 
-UdpSender::UdpSender(boost::asio::io_service& io_service, const boost::asio::ip::address& multicast_address) : endpoint_(multicast_address, multicast_port), socket_(io_service, endpoint_.protocol()), timer_(io_service), message_count_(0)
+UdpSender::UdpSender(boost::asio::io_service& io_service, const boost::asio::ip::address& multicast_address, const std::string &message) : endpoint_(multicast_address, multicast_port), socket_(io_service, endpoint_.protocol()), timer_(io_service), message_count_(0)
 {
-    std::ostringstream os;
+    //std::ostringstream os;
     //os << "Message " << message_count_++;
     //os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><e:Envelope xmlns:e=\"http://www.w3.org/2003/05/soap-envelope\"xmlns:w=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\"xmlns:d=\"http://schemas.xmlsoap.org/ws/2005/04/discovery\"xmlns:dn=\"http://www.onvif.org/ver10/network/wsdl\"><e:Header><w:MessageID>uuid:84ede3de-7dec-11d0-c360-f01234567890</w:MessageID><w:To e:mustUnderstand=\"true\">urn:schemas-xmlsoap-org:ws:2005:04:discovery</w:To><w:Actiona:mustUnderstand=\"true\">http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe</w:Action></e:Header><e:Body><d:Probe><d:Types>dn:NetworkVideoTransmitter</d:Types></d:Probe></e:Body></e:Envelope>";
 
-    os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tds=\"http://www.onvif.org/ver10/device/wsdl\"><SOAP-ENV:Body><tds:GetSystemDateAndTime/></SOAP-ENV:Body></SOAP-ENV:Envelope>";
+    //os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tds=\"http://www.onvif.org/ver10/device/wsdl\"><SOAP-ENV:Body><tds:GetSystemDateAndTime/></SOAP-ENV:Body></SOAP-ENV:Envelope>";
     /*
 <?xml version="1.0" encoding="UTF-8"?><e:Envelope xmlns:e="http://www.w3.org/2003/05/soap-envelope"xmlns:w="http://schemas.xmlsoap.org/ws/2004/08/addressing"xmlns:d="http://schemas.xmlsoap.org/ws/2005/04/discovery"xmlns:dn="http://www.onvif.org/ver10/network/wsdl"><e:Header><w:MessageID>uuid:84ede3de-7dec-11d0-c360-f01234567890</w:MessageID><w:To e:mustUnderstand="true">urn:schemas-xmlsoap-org:ws:2005:04:discovery</w:To><w:Actiona:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe</w:Action></e:Header><e:Body><d:Probe><d:Types>dn:NetworkVideoTransmitter</d:Types></d:Probe></e:Body></e:Envelope>
       */
-    message_ = os.str();
+
+    message_ = message;
 
     socket_.async_send_to(
         boost::asio::buffer(message_), endpoint_,

@@ -2,13 +2,12 @@
 #define APP_H
 
 #include <string>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
 #include "onv.h"
-
-
 
 class App
 {
