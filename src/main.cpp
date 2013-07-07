@@ -32,10 +32,12 @@ int main(int argc, char* argv[])
         XmlHelper *xmlHelper = new XmlHelper;
         QDomDocument docDiscover = xmlHelper->loadXml("xml/discover.xml");
         QDomDocument docGetSystemDateAndTime = xmlHelper->loadXml("xml/device.GetSystemDateAndTime.xml");
+        QDomDocument docGetUsers = xmlHelper->loadXml("xml/getUsers.xml");
         delete xmlHelper;
 
         boost::asio::io_service io_service;
         boost::asio::io_service io_service_tcp;
+        boost::asio::io_service io_service_getUsers;
 
         UdpSender s(io_service, boost::asio::ip::address::from_string("239.255.255.250"), docDiscover.toString().toStdString());
         io_service.run();
@@ -44,6 +46,10 @@ int main(int argc, char* argv[])
         TcpAsyncClient c(io_service_tcp, "192.168.1.200", "/onvif/device_service", docGetSystemDateAndTime.toString().toStdString());
         io_service_tcp.run();
         io_service_tcp.stop();
+
+        TcpAsyncClient cGetUsers(io_service_getUsers, "192.168.1.200", "/onvif/device_service", docGetUsers.toString().toStdString());
+        io_service_getUsers.run();
+        io_service_getUsers.stop();
 
 
 //        std::ofstream ofs("filename.xml");
