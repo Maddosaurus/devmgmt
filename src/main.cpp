@@ -20,36 +20,40 @@
 #include "src/communication/udpsender.h"
 #include "src/communication/udpreceiver.h"
 #include "helper/xmlhelper.h"
+#include "helper/authenticator.h"
 
 // the following macro eliminates the attributes
 //BOOST_CLASS_IMPLEMENTATION(GetSystemDateAndTime, object_serializable)
 
 int main(int argc, char* argv[])
 {
+    Authenticator *auth = new Authenticator();
+    auth->genToken("","");
+    delete auth;
 
     try {
 
-        XmlHelper *xmlHelper = new XmlHelper;
-        QDomDocument docDiscover = xmlHelper->loadXml("xml/discover.xml");
-        QDomDocument docGetSystemDateAndTime = xmlHelper->loadXml("xml/device.GetSystemDateAndTime.xml");
-        QDomDocument docGetUsers = xmlHelper->loadXml("xml/getUsers.xml");
-        delete xmlHelper;
+//        XmlHelper *xmlHelper = new XmlHelper;
+//        QDomDocument docDiscover = xmlHelper->loadXml("xml/discover.xml");
+//        QDomDocument docGetSystemDateAndTime = xmlHelper->loadXml("xml/device.GetSystemDateAndTime.xml");
+//        QDomDocument docGetUsers = xmlHelper->loadXml("xml/getUsers.xml");
+//        delete xmlHelper;
 
-        boost::asio::io_service io_service;
-        boost::asio::io_service io_service_tcp;
-        boost::asio::io_service io_service_getUsers;
+//        boost::asio::io_service io_service;
+//        boost::asio::io_service io_service_tcp;
+//        boost::asio::io_service io_service_getUsers;
 
-        UdpSender s(io_service, boost::asio::ip::address::from_string("239.255.255.250"), docDiscover.toString().toStdString());
-        io_service.run();
-        io_service.stop();
+//        UdpSender s(io_service, boost::asio::ip::address::from_string("239.255.255.250"), docDiscover.toString().toStdString());
+//        io_service.run();
+//        io_service.stop();
 
-        TcpAsyncClient c(io_service_tcp, "192.168.1.200", "/onvif/device_service", docGetSystemDateAndTime.toString().toStdString());
-        io_service_tcp.run();
-        io_service_tcp.stop();
+//        TcpAsyncClient c(io_service_tcp, "192.168.1.200", "/onvif/device_service", docGetSystemDateAndTime.toString().toStdString());
+//        io_service_tcp.run();
+//        io_service_tcp.stop();
 
-        TcpAsyncClient cGetUsers(io_service_getUsers, "192.168.1.200", "/onvif/device_service", docGetUsers.toString().toStdString());
-        io_service_getUsers.run();
-        io_service_getUsers.stop();
+//        TcpAsyncClient cGetUsers(io_service_getUsers, "192.168.1.200", "/onvif/device_service", docGetUsers.toString().toStdString());
+//        io_service_getUsers.run();
+//        io_service_getUsers.stop();
 
 
 //        std::ofstream ofs("filename.xml");

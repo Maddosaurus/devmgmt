@@ -39,7 +39,7 @@ SOURCES     += \
     src/device/envelope.cpp \
     src/device/body.cpp \
     src/helper/xmlhelper.cpp \
-    src/helper/usertokenhelper.cpp
+    src/helper/authenticator.cpp
 
 HEADERS     += \
     src/communication/udpreceiver.h \
@@ -51,7 +51,7 @@ HEADERS     += \
     src/device/envelope.h \
     src/device/body.h \
     src/helper/xmlhelper.h \
-    src/helper/usertokenhelper.h
+    src/helper/authenticator.h
 
 OTHER_FILES += \
     xml/device.GetSystemDateAndTime.xml \
