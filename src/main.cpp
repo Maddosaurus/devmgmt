@@ -33,10 +33,6 @@ int main(int argc, char* argv[])
     std::string token[4];
     auth->genToken("admin","pass",token);
 
-    for(int i=0;i<3;i++)
-        std::cout<<token[i];
-    std::cout << "\n\n";
-
     delete auth;
 
     try {
@@ -56,24 +52,40 @@ int main(int argc, char* argv[])
 //        io_service.run();
 //        io_service.stop();
 
-//        TcpAsyncClient c(io_service_tcp, "192.168.1.200", "/onvif/device_service", docGetSystemDateAndTime.toString().toStdString());
-//        io_service_tcp.run();
-//        io_service_tcp.stop();
+        ///---Kompletter, funktionierender Aufruf von GetSysDateTime
 
-        //---Heißt nur hier soap12:Envelope
-        docGetUsers.elementsByTagName("soap12:Envelope").at(0).appendChild((docAuthHeader.elementsByTagName("s:Header").at(0)));
+        docGetSystemDateAndTime.elementsByTagName("SOAP-ENV:Envelope").at(0).appendChild((docAuthHeader.elementsByTagName("s:Header").at(0)));
 
-        docGetUsers.elementsByTagName("Username").at(0).firstChild().setNodeValue(token[0].data());
-        docGetUsers.elementsByTagName("Password").at(0).firstChild().setNodeValue(token[1].data());
-        docGetUsers.elementsByTagName("Nonce").at(0).firstChild().setNodeValue(token[2].data());
-        docGetUsers.elementsByTagName("Created").at(0).firstChild().setNodeValue(token[3].data());
+        docGetSystemDateAndTime.elementsByTagName("Username").at(0).firstChild().setNodeValue(token[0].data());
+        docGetSystemDateAndTime.elementsByTagName("Password").at(0).firstChild().setNodeValue(token[1].data());
+        docGetSystemDateAndTime.elementsByTagName("Nonce").at(0).firstChild().setNodeValue(token[2].data());
+        docGetSystemDateAndTime.elementsByTagName("Created").at(0).firstChild().setNodeValue(token[3].data());
+
+        TcpAsyncClient c(io_service_tcp, "192.168.1.200", "/onvif/device_service", docGetSystemDateAndTime.toString().toStdString());
+        io_service_tcp.run();
+        io_service_tcp.stop();
+
+        ///------
+
+
+        ///---Heißt nur hier soap12:Envelope ....... Kompletter, funktionierender Aufruf von GetUsers
+//        docGetUsers.elementsByTagName("soap12:Envelope").at(0).appendChild((docAuthHeader.elementsByTagName("s:Header").at(0)));
+
+//        docGetUsers.elementsByTagName("Username").at(0).firstChild().setNodeValue(token[0].data());
+//        docGetUsers.elementsByTagName("Password").at(0).firstChild().setNodeValue(token[1].data());
+//        docGetUsers.elementsByTagName("Nonce").at(0).firstChild().setNodeValue(token[2].data());
+//        docGetUsers.elementsByTagName("Created").at(0).firstChild().setNodeValue(token[3].data());
+
+
 
         //std::cout << docGetUsers.toString().toStdString() << std::endl;
-        //---
 
-        TcpAsyncClient cGetUsers(io_service_getUsers, "192.168.1.200", "/onvif/device_service", docGetUsers.toString().toStdString());
-        io_service_getUsers.run();
-        io_service_getUsers.stop();
+
+//        TcpAsyncClient cGetUsers(io_service_getUsers, "192.168.1.200", "/onvif/device_service", docGetUsers.toString().toStdString());
+//        io_service_getUsers.run();
+//        io_service_getUsers.stop();
+
+           ///-----------------------------
 
 
 //        std::ofstream ofs("filename.xml");

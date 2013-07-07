@@ -20,7 +20,8 @@ QDomDocument XmlHelper::loadXml(std::string filename)
         return doc;
     }
 
-    std::cout << doc.toString().toStdString() << std::endl;
+    //Debug: Print whole XML
+    //std::cout << doc.toString().toStdString() << std::endl;
 
     file.close();
 
