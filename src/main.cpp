@@ -16,9 +16,9 @@
 #include "device/getsystemdateandtime.h"
 #include "device/envelope.h"
 #include "onv.h"
-#include "tcpasyncclient.h"
-#include "udpsender.h"
-#include "udpreceiver.h"
+#include "src/communication/tcpasyncclient.h"
+#include "src/communication/udpsender.h"
+#include "src/communication/udpreceiver.h"
 #include "helper/xmlhelper.h"
 
 // the following macro eliminates the attributes
