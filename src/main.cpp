@@ -22,26 +22,35 @@
 #include "helper/xmlhelper.h"
 #include "helper/authenticator.h"
 
+
 // the following macro eliminates the attributes
 //BOOST_CLASS_IMPLEMENTATION(GetSystemDateAndTime, object_serializable)
 
 int main(int argc, char* argv[])
 {
+
     Authenticator *auth = new Authenticator();
-    auth->genToken("","");
+    std::string token[4];
+    auth->genToken("admin","pass",token);
+
+    for(int i=0;i<3;i++)
+        std::cout<<token[i];
+    std::cout << "\n\n";
+
     delete auth;
 
     try {
 
-//        XmlHelper *xmlHelper = new XmlHelper;
-//        QDomDocument docDiscover = xmlHelper->loadXml("xml/discover.xml");
-//        QDomDocument docGetSystemDateAndTime = xmlHelper->loadXml("xml/device.GetSystemDateAndTime.xml");
-//        QDomDocument docGetUsers = xmlHelper->loadXml("xml/getUsers.xml");
-//        delete xmlHelper;
+        XmlHelper *xmlHelper = new XmlHelper;
+        QDomDocument docAuthHeader = xmlHelper->loadXml("xml/auth.xml");
+        QDomDocument docDiscover = xmlHelper->loadXml("xml/discover.xml");
+        QDomDocument docGetSystemDateAndTime = xmlHelper->loadXml("xml/device.GetSystemDateAndTime.xml");
+        QDomDocument docGetUsers = xmlHelper->loadXml("xml/getUsers.xml");
+        delete xmlHelper;
 
-//        boost::asio::io_service io_service;
-//        boost::asio::io_service io_service_tcp;
-//        boost::asio::io_service io_service_getUsers;
+        boost::asio::io_service io_service;
+        boost::asio::io_service io_service_tcp;
+        boost::asio::io_service io_service_getUsers;
 
 //        UdpSender s(io_service, boost::asio::ip::address::from_string("239.255.255.250"), docDiscover.toString().toStdString());
 //        io_service.run();
@@ -51,9 +60,20 @@ int main(int argc, char* argv[])
 //        io_service_tcp.run();
 //        io_service_tcp.stop();
 
-//        TcpAsyncClient cGetUsers(io_service_getUsers, "192.168.1.200", "/onvif/device_service", docGetUsers.toString().toStdString());
-//        io_service_getUsers.run();
-//        io_service_getUsers.stop();
+        //---Heißt nur hier soap12:Envelope
+        docGetUsers.elementsByTagName("soap12:Envelope").at(0).appendChild((docAuthHeader.elementsByTagName("s:Header").at(0)));
+
+        docGetUsers.elementsByTagName("Username").at(0).firstChild().setNodeValue(token[0].data());
+        docGetUsers.elementsByTagName("Password").at(0).firstChild().setNodeValue(token[1].data());
+        docGetUsers.elementsByTagName("Nonce").at(0).firstChild().setNodeValue(token[2].data());
+        docGetUsers.elementsByTagName("Created").at(0).firstChild().setNodeValue(token[3].data());
+
+        //std::cout << docGetUsers.toString().toStdString() << std::endl;
+        //---
+
+        TcpAsyncClient cGetUsers(io_service_getUsers, "192.168.1.200", "/onvif/device_service", docGetUsers.toString().toStdString());
+        io_service_getUsers.run();
+        io_service_getUsers.stop();
 
 
 //        std::ofstream ofs("filename.xml");
@@ -71,13 +91,13 @@ int main(int argc, char* argv[])
 
 
 
-//        //GetSystemDateAndTime *gsdt = new GetSystemDateAndTime(1, 2, 3.0);
-//        //oa << BOOST_SERIALIZATION_NVP(gsdt);
+        //GetSystemDateAndTime *gsdt = new GetSystemDateAndTime(1, 2, 3.0);
+        //oa << BOOST_SERIALIZATION_NVP(gsdt);
 
-//        //std::cout << oss.str() << std::endl;
+        //std::cout << oss.str() << std::endl;
 
-//        //delete gsdt;
-//        delete envelope;
+        //delete gsdt;
+        //delete envelope;
 
     }
     catch (std::exception& e)

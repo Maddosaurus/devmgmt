@@ -56,6 +56,7 @@ HEADERS     += \
 OTHER_FILES += \
     xml/device.GetSystemDateAndTime.xml \
     xml/discover.xml \
-    xml/getUsers.xml
+    xml/getUsers.xml \
+    xml/auth.xml
 
 
