@@ -26,6 +26,12 @@ Authenticator::Authenticator()
 {
 }
 
+/**
+ * @brief Authenticator::genToken - Generate a new authentication token
+ * @param user      Username for the target device
+ * @param password  Password for the target device
+ * @param result    Array consisting of user, digest, base64-encoded nonce and a timestamp
+ */
 void Authenticator::genToken(std::string user, std::string password, std::string result[]){
 
     QDateTime dt = QDateTime::currentDateTimeUtc();
@@ -49,7 +55,7 @@ void Authenticator::genToken(std::string user, std::string password, std::string
     hash.addData(usrData[1], usrData[1].length());
     hash.addData(usrData[2], usrData[2].length());
 
-    QByteArray finish= hash.result();
+    QByteArray finish = hash.result();
 
     finish = finish.toBase64();
 

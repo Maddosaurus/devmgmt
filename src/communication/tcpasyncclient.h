@@ -24,6 +24,9 @@ using boost::asio::ip::tcp;
 class TcpAsyncClient
 {
 private:
+    std::ostringstream os;
+    std::string foundURI;
+
     tcp::resolver resolver_;
     tcp::socket socket_;
     boost::asio::streambuf request_;
@@ -38,7 +41,7 @@ private:
 
 public:
     TcpAsyncClient(boost::asio::io_service& io_service, const std::string& server, const std::string& path, const std::string &message);
-
+    std::string getURI();
 };
 
 #endif // TCPASYNCCLIENT_H

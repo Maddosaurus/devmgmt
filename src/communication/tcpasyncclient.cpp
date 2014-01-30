@@ -103,12 +103,15 @@ void TcpAsyncClient::handle_read_headers(const boost::system::error_code& err)
     std::istream response_stream(&response_);
     std::string header;
     while (std::getline(response_stream, header) && header != "\r")
-      std::cout << header << "\n";
-    std::cout << "\n";
+      //std::cout << header << "\n";
+    //std::cout << "\n";
 
     // Write whatever content we already have to output.
     if (response_.size() > 0)
-      std::cout << &response_;
+      //std::cout << &response_;
+
+    //clear the stringstream before using it to search for the URI
+    os.str("");
 
     // Start reading remaining data until EOF.
     boost::asio::async_read(socket_, response_,
@@ -122,18 +125,38 @@ void TcpAsyncClient::handle_read_headers(const boost::system::error_code& err)
   }
 }
 
+//!
+//! \brief TcpAsyncClient::handle_read_content Änderungen: Nur noch IP-Adresse ausgeben.
+//! \param err
+//!
 void TcpAsyncClient::handle_read_content(const boost::system::error_code& err)
 {
   if (!err)
   {
-    // Write all of the data that has been read so far.
-    std::cout << &response_;
+    os<<&response_;
+    std::string ergebnis="";
 
     // Continue reading remaining data until EOF.
     boost::asio::async_read(socket_, response_,
         boost::asio::transfer_at_least(1),
         boost::bind(&TcpAsyncClient::handle_read_content, this,
           boost::asio::placeholders::error));
+
+    //Gesucht ist der Bereich zwischen <tt:Uri> und </tt:Uri>.
+    //Das Ganze nun um 8 nach rechts verschoben, um den XML-Tag nicht mit in der Ausgabe zu haben
+    std::size_t found = os.str().find("<tt:Uri>");
+      if (found!=std::string::npos){
+          std::size_t foundEnd = os.str().find("</tt:Uri>");
+            if (found!=std::string::npos){
+                ergebnis = os.str().substr(found+8, foundEnd-found-8);
+                //std::cout << ergebnis << std::endl;
+                this->foundURI = ergebnis;
+                return;
+            }
+            else{
+                std::cout << "No end found!!\n";
+            }
+      }
   }
   else if (err != boost::asio::error::eof)
   {
@@ -165,4 +188,8 @@ TcpAsyncClient::TcpAsyncClient(boost::asio::io_service& io_service,
       boost::bind(&TcpAsyncClient::handle_resolve, this,
         boost::asio::placeholders::error,
         boost::asio::placeholders::iterator));
+}
+
+std::string TcpAsyncClient::getURI(){
+    return this->foundURI;
 }
