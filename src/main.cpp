@@ -89,7 +89,6 @@ int main(int argc, char** argv)
         //Generate the digest for authentication purposes
         Authenticator *auth = new Authenticator();
         std::string token[4];
-        //auth->genToken("admin","pass",token);
         auth->genToken(user,pass,token);
         delete auth;
 
@@ -129,7 +128,6 @@ int main(int argc, char** argv)
         docGetURIs.elementsByTagName("Nonce").at(0).firstChild().setNodeValue(token[2].data());
         docGetURIs.elementsByTagName("Created").at(0).firstChild().setNodeValue(token[3].data());
 
-        //TcpAsyncClient c(io_service_tcp, "192.168.1.200", "/onvif/device_service", docGetURIs.toString().toStdString());
         if(base_ip != "" && query != ""){
             TcpAsyncClient c(io_service_tcp, base_ip, query, docGetURIs.toString().toStdString());
             io_service_tcp.run();
